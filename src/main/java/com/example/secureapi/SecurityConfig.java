@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -13,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
@@ -29,14 +27,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/login", "/api/register").permitAll()  // Allow access to login and register endpoints
-                .antMatchers("/api/admin").hasRole("ADMIN")  // Only ADMIN can access this
-                .antMatchers("/api/user").hasRole("USER")  // Only USER can access this
-                .anyRequest().authenticated()  // All other requests require authentication
+                .antMatchers("/api/login", "/api/register").permitAll()
+                .antMatchers("/api/admin").hasRole("ADMIN")
+                .antMatchers("/api/user").hasRole("USER")
+                .anyRequest().authenticated()
                 .and()
-                .oauth2Login()  // Enable OAuth2 login
-                .and()
-                .httpBasic();  // Basic authentication for JWT
+                .httpBasic();  // Keep basic authentication and disable OAuth2
+
+        // .oauth2Login(); // Commented out to disable OAuth2 login temporarily
     }
 
     @Bean
@@ -49,6 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return NoOpPasswordEncoder.getInstance();  // Insecure: use a better encoder in production
     }
 }
+
+
 
 
 

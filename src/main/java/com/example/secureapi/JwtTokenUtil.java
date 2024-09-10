@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtTokenUtil {
-    private String secretKey = "1111";
+    private String secretKey = "secret_key";
 
     public String generateToken(String username) {
         return Jwts.builder()
